@@ -2,13 +2,22 @@
 
 {
   # https://devenv.sh/basics/
-  env.GREET = "devenv";
+  env.GREET = "symfony-skeleton";
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.git ];
+  packages = with pkgs; [
+    git
+    symfony-cli
+  ];
 
   # https://devenv.sh/languages/
-  # languages.rust.enable = true;
+  # https://devenv.sh/reference/options/#languagesansibleenable
+  languages= {
+    php = {
+      enable = true;
+      version = "8.4";
+    };
+  };
 
   # https://devenv.sh/processes/
   # processes.cargo-watch.exec = "cargo-watch";
