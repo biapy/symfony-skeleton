@@ -41,17 +41,17 @@
       composer-normalize = {
         enable = true;
         before = [ "composer-validate" ];
-        package = pkgs.php84Packages.composer;
+        package = pkgs.phpPackages.composer;
         files = "/composer.json";
         pass_filenames = false;
-        entry = "${pkgs.php84Packages.composer}/bin/composer normalize";
+        entry = "${pkgs.phpPackages.composer}/bin/composer normalize";
       };
       composer-validate = {
         enable = true;
-        package = pkgs.php84Packages.composer;
+        package = pkgs.phpPackages.composer;
         files = "/composer\.*";
         pass_filenames = false;
-        entry = "${pkgs.php84Packages.composer}/bin/composer validate --no-check-publish";
+        entry = "${pkgs.phpPackages.composer}/bin/composer validate --no-check-publish";
         stages = [
           "pre-commit"
           "pre-push"
@@ -61,10 +61,10 @@
       composer-audit = {
         enable = true;
         after = [ "composer-validate" ];
-        package = pkgs.php84Packages.composer;
+        package = pkgs.phpPackages.composer;
         files = "/composer\.*";
         pass_filenames = false;
-        entry = "${pkgs.php84Packages.composer}/bin/composer audit";
+        entry = "${pkgs.phpPackages.composer}/bin/composer audit";
         stages = [
           "pre-commit"
           "pre-push"
