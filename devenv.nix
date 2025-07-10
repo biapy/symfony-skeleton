@@ -48,6 +48,18 @@
           "pre-push"
         ];
       };
+
+      composer-audit = {
+        enable = true;
+        after = [ "composer-validate" ];
+        package = pkgs.php84Packages.composer;
+        files = "composer\.*";
+        entry = "${pkgs.php84Packages.composer}/bin/composer audit";
+        stages = [
+          "pre-commit"
+          "pre-push"
+        ];
+      };
     };
   };
 
