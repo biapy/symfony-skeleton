@@ -1,4 +1,10 @@
-{ pkgs, lib, config, inputs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  inputs,
+  ...
+}:
 
 {
   # https://devenv.sh/basics/
@@ -12,10 +18,24 @@
 
   # https://devenv.sh/languages/
   # https://devenv.sh/reference/options/#languagesansibleenable
-  languages= {
+  languages = {
     php = {
       enable = true;
       version = "8.4";
+    };
+  };
+
+  git-hooks = {
+    hooks = {
+      # Nix files
+      nixfmt-rfc-style.enable = true;
+
+      # Commit messages
+      commitizen.enable = true;
+
+      # Markdown files
+      markdownlint.enable = true;
+      mdformat.enable = true;
     };
   };
 
