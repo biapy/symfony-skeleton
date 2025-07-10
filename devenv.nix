@@ -38,10 +38,19 @@
       mdformat.enable = true;
 
       # Composer json file
+      composer-normalize = {
+        enable = true;
+        before = [ "composer-validate" ];
+        package = pkgs.php84Packages.composer;
+        files = "/composer.json";
+        pass_filenames = false;
+        entry = "${pkgs.php84Packages.composer}/bin/composer normalize";
+      };
       composer-validate = {
         enable = true;
         package = pkgs.php84Packages.composer;
-        files = "composer\.*";
+        files = "/composer\.*";
+        pass_filenames = false;
         entry = "${pkgs.php84Packages.composer}/bin/composer validate --no-check-publish";
         stages = [
           "pre-commit"
@@ -53,7 +62,8 @@
         enable = true;
         after = [ "composer-validate" ];
         package = pkgs.php84Packages.composer;
-        files = "composer\.*";
+        files = "/composer\.*";
+        pass_filenames = false;
         entry = "${pkgs.php84Packages.composer}/bin/composer audit";
         stages = [
           "pre-commit"
