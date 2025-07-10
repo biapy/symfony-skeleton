@@ -36,6 +36,18 @@
       # Markdown files
       markdownlint.enable = true;
       mdformat.enable = true;
+
+      # Composer json file
+      composer-validate = {
+        enable = true;
+        package = pkgs.php84Packages.composer;
+        files = "composer\.*";
+        entry = "${pkgs.php84Packages.composer}/bin/composer validate --no-check-publish";
+        stages = [
+          "pre-commit"
+          "pre-push"
+        ];
+      };
     };
   };
 
