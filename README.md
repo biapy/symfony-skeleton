@@ -1,5 +1,7 @@
 # symfony-skeleton
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
 Skeleton for Symfony web apps
 
 ## 🛠️ Tech Stack
@@ -17,9 +19,27 @@ Skeleton for Symfony web apps
 
 ### Linting
 
+- [pre-commit](https://pre-commit.com/)
 - [Commitizen](https://commitizen-tools.github.io/commitizen/)
+
+#### Markdown
+
 - [mdformat](https://mdformat.readthedocs.io/en/stable/)
 - [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli)
+
+#### PHP
+
+- [PHPStan](https://phpstan.org/)
+
+  with these plugins:
+
+  - [PHPStan Extension Installer @ GitHub](https://github.com/phpstan/extension-installer).
+  - [PHPStan strict rules @ GitHub](https://github.com/phpstan/phpstan-strict-rules).
+  - [PHPStan deprecation rules @ GitHub](https://github.com/phpstan/phpstan-deprecation-rules).
+  - [PHPStan PHPUnit extensions and rules @ GitHub](https://github.com/phpstan/phpstan-phpunit).
+  - [PHPStan Symfony Framework extensions and rules @ GitHub](https://github.com/phpstan/phpstan-symfony).
+  - [PHPStan Type Perfect rules @ GitHub](https://github.com/rectorphp/type-perfect/).
+  - [Doctrine extensions for PHPStan @ GitHub](https://github.com/phpstan/phpstan-doctrine).
 
 ## ➤ License
 
