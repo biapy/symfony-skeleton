@@ -5,7 +5,6 @@
   inputs,
   ...
 }:
-
 {
   # https://devenv.sh/basics/
   env.GREET = "symfony-skeleton";
@@ -63,6 +62,7 @@
       # Composer json file
       composer-normalize = {
         enable = true;
+        name = "composer normalize";
         before = [ "composer-validate" ];
         package = pkgs.phpPackages.composer;
         extraPackages = [
@@ -75,6 +75,7 @@
 
       composer-validate = {
         enable = true;
+        name = "composer validate";
         package = pkgs.phpPackages.composer;
         extraPackages = [
           pkgs.parallel
@@ -89,6 +90,7 @@
 
       composer-audit = {
         enable = true;
+        name = "composer audit";
         after = [ "composer-validate" ];
         package = pkgs.phpPackages.composer;
         extraPackages = [
