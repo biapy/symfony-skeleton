@@ -13,6 +13,27 @@
   # https://devenv.sh/packages/
   packages = with pkgs; [
     git
+    lazygit # Git terminal UI
+
+    lnav # Log files viewer
+    lazyjournal # TUI for journalctl, file system logs, as well Docker and Podman containers.
+    glow # TUI Markdown file viewer
+
+    silver-searcher # ag, ack alternative
+    f2 # Batch file renamer
+    dust # du alternative
+    dogdns # dig alternative
+    gping # ping with data visualization
+
+    jq # JSON processor
+    yq-go # YAML processor
+
+    ## Docker related
+    lazydocker # Docker TUI
+    ctop # Docker TUI, showing running container resources usage
+
+    parallel # Run commands in parallel
+
     symfony-cli
   ];
 
@@ -24,6 +45,8 @@
       version = "8.4";
     };
   };
+
+  dotenv.enable = true;
 
   git-hooks = {
     hooks = {
@@ -42,16 +65,22 @@
         enable = true;
         before = [ "composer-validate" ];
         package = pkgs.phpPackages.composer;
-        files = "/composer.json";
-        pass_filenames = false;
-        entry = "${pkgs.phpPackages.composer}/bin/composer normalize";
+        extraPackages = [
+          pkgs.parallel
+          pkgs.git
+        ];
+        files = "composer.json";
+        entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize --dry-run \"$(${pkgs.git}/bin/git rev-parse --show-toplevel)/\"{} ::: ";
       };
+
       composer-validate = {
         enable = true;
         package = pkgs.phpPackages.composer;
-        files = "/composer\.*";
-        pass_filenames = false;
-        entry = "${pkgs.phpPackages.composer}/bin/composer validate --no-check-publish";
+        extraPackages = [
+          pkgs.parallel
+        ];
+        files = "composer\.(json|lock)$";
+        entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer validate --no-check-publish {} ::: ";
         stages = [
           "pre-commit"
           "pre-push"
@@ -62,9 +91,13 @@
         enable = true;
         after = [ "composer-validate" ];
         package = pkgs.phpPackages.composer;
-        files = "/composer\.*";
-        pass_filenames = false;
-        entry = "${pkgs.phpPackages.composer}/bin/composer audit";
+        extraPackages = [
+          pkgs.parallel
+          pkgs.coreutils
+        ];
+        files = "composer\.(json|lock)$";
+        verbose = true;
+        entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer --working-dir=\"$(${pkgs.coreutils}/bin/dirname {})\" audit ::: ";
         stages = [
           "pre-commit"
           "pre-push"
@@ -80,12 +113,18 @@
   # services.postgres.enable = true;
 
   # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
-  '';
+  scripts = {
+    hello.exec = ''
+      echo hello from $GREET
+    '';
+    parallel-will-cite.exec = ''
+      yes 'will cite' | parallel --citation 2&>'/dev/null'
+    '';
+  };
 
   enterShell = ''
     hello
+    parallel-will-cite
     git --version
   '';
 
