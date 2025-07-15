@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * @copyright 2025 Biapy
+ * @license MIT
+ */
+
+declare(strict_types=1);
+
 use App\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-return function (array $context) {
-    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-};
+$env = (isset($_SERVER['APP_ENV']) && is_string($_SERVER['APP_ENV'])) ? $_SERVER['APP_ENV'] : 'dev';
+
+return fn (array $context) => new Kernel(
+    $env,
+    (bool) $context['APP_DEBUG'],
+);
