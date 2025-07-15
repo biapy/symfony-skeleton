@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * @copyright 2023 Biapy
  * @license MIT
  */
@@ -11,7 +10,6 @@ declare(strict_types=1);
 use App\Kernel;
 use App\Tests\PHPStan\PHPStanObjectManager;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Dotenv\Dotenv;
 
 require dirname(__DIR__).'/../tests/bootstrap.php';
 
@@ -25,14 +23,14 @@ $kernel->boot();
 $doctrineRegistries = [];
 
 $registryNames = ['doctrine', 'doctrine_mongodb'];
-foreach($registryNames as $registryName) {
+foreach ($registryNames as $registryName) {
     if ($kernel->getContainer()->has($registryName)) {
         $doctrineRegistries[] = $kernel->getContainer()->get($registryName);
     }
 }
 
-if([] === $doctrineRegistries) {
-    throw new \RuntimeException('Doctrine registries cannot be empty');
+if ([] === $doctrineRegistries) {
+    throw new RuntimeException('Doctrine registries cannot be empty');
 }
 
 /** @var non-empty-array<array-key,ManagerRegistry> $doctrineRegistries */

@@ -32,7 +32,7 @@ final class PHPStanMetadataFactory implements ClassMetadataFactory
     public function __construct(
         private array $doctrineRegistries,
     ) {
-        if([] === $doctrineRegistries) {
+        if ([] === $doctrineRegistries) {
             throw new \InvalidArgumentException('Doctrine registries cannot be empty');
         }
     }

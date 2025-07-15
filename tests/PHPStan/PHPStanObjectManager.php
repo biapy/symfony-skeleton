@@ -35,7 +35,7 @@ final class PHPStanObjectManager implements ObjectManager
     public function __construct(
         private array $doctrineRegistries,
     ) {
-        if([] === $doctrineRegistries) {
+        if ([] === $doctrineRegistries) {
             throw new \InvalidArgumentException('Doctrine registries cannot be empty');
         }
 
@@ -153,7 +153,8 @@ final class PHPStanObjectManager implements ObjectManager
     }
 
     #[\Override]
-    public function isUninitializedObject(mixed $value): bool {
+    public function isUninitializedObject(mixed $value): bool
+    {
         if (!is_object($value)) {
             return false;
         }
