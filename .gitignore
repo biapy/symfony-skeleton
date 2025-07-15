@@ -61,6 +61,9 @@ devenv.local.nix
 # Composer bin
 /vendor-bin/*/vendor
 
+# PHP CS Fixer cache
+/.php-cs-fixer.cache
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

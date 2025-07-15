@@ -114,6 +114,17 @@
         entry = "${config.languages.php.package}/bin/php vendor/bin/phpstan analyse";
         args = [ "--memory-limit=256m" ];
       };
+
+      php-cs-fixer = {
+        enable = true;
+        package = config.languages.php.package;
+        entry = "${config.languages.php.package}/bin/php vendor/bin/php-cs-fixer fix";
+        args = [
+          "--config"
+          "${config.env.DEVENV_ROOT}/.php-cs-fixer.php"
+          "--dry-run"
+        ];
+      };
     };
   };
 
