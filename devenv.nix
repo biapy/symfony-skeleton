@@ -105,6 +105,15 @@
           "pre-push"
         ];
       };
+
+      phpstan = {
+        enable = true;
+        name = "PHPStan";
+        package = pkgs.phpPackages.composer;
+        pass_filenames = false;
+        entry = "${pkgs.php}/bin/php vendor/bin/phpstan analyse";
+        args = [ "--memory-limit=256m" ];
+      };
     };
   };
 
