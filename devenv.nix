@@ -109,9 +109,9 @@
       phpstan = {
         enable = true;
         name = "PHPStan";
-        package = pkgs.phpPackages.composer;
+        package = config.languages.php.package;
         pass_filenames = false;
-        entry = "${pkgs.php}/bin/php vendor/bin/phpstan analyse";
+        entry = "${config.languages.php.package}/bin/php vendor/bin/phpstan analyse";
         args = [ "--memory-limit=256m" ];
       };
     };
