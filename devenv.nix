@@ -6,6 +6,13 @@
   ...
 }:
 {
+  name = "Symfony skeleton";
+
+  dotenv.enable = true;
+  starship.enable = true;
+  difftastic.enable = true;
+  delta.enable = true;
+
   # https://devenv.sh/basics/
   env.GREET = "symfony-skeleton";
 
@@ -45,7 +52,57 @@
     };
   };
 
-  dotenv.enable = true;
+  # https://devenv.sh/processes/
+  # processes.symfony-server.exec = "symfony server:start";
+
+  # https://devenv.sh/services/
+  # services.postgres.enable = true;
+
+  # https://devenv.sh/scripts/
+  scripts = {
+    hello.exec = ''
+      echo hello from $GREET
+    '';
+    parallel-will-cite = {
+      description = "Accept GNU parallel citation prompt";
+      exec = ''
+        set -o 'errexit' -o 'nounset' -o 'pipefail'
+        yes 'will cite' | parallel --citation 2&>'/dev/null'
+      '';
+    };
+    detr = {
+      description = "Alias of devenv tasks run";
+      exec = ''
+        set -o 'errexit' -o 'nounset' -o 'pipefail'
+        devenv tasks run "$@"
+      '';
+    };
+  };
+
+  enterShell = ''
+    hello
+    git --version
+    parallel-will-cite
+
+    export PATH="${config.env.DEVENV_ROOT}/vendor/bin:${config.env.DEVENV_ROOT}/bin:$PATH"
+  '';
+
+  # https://devenv.sh/tasks/
+  tasks = {
+    "ci:composer-normalize".exec =
+      "${pkgs.fd}/bin/fd 'composer\.json$' '${config.env.DEVENV_ROOT}' --exec ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize {} \;";
+    "ci:nixfmt".exec =
+      "${pkgs.fd}/bin/fd '.*\.nix$' '${config.env.DEVENV_ROOT}' --exec ${pkgs.nixfmt-rfc-style}/bin/nixfmt --strict {} \;";
+    "ci:php-cs-fixer".exec = "${config.languages.php.package}/bin/php 'vendor/bin/php-cs-fixer' 'fix'";
+    "ci:rector".exec = "${config.languages.php.package}/bin/php 'vendor/bin/rector' 'process'";
+    # "devenv:enterShell".after = [ "myproj:setup" ];
+  };
+
+  # https://devenv.sh/tests/
+  enterTest = ''
+    echo "Running tests"
+    git --version | grep --color=auto "${pkgs.git.version}"
+  '';
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
@@ -56,10 +113,6 @@
 
     # Commit messages
     commitizen.enable = true;
-
-    # EditorConfig
-    eclint.enable = true;
-    editorconfig-checker.enable = true;
 
     # Markdown files
     markdownlint.enable = true;
@@ -80,7 +133,7 @@
         pkgs.git
       ];
       files = "composer.json";
-      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize --dry-run \"$(${pkgs.git}/bin/git rev-parse --show-toplevel)/\"{} ::: ";
+      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize --dry-run \"${config.env.DEVENV_ROOT}/\"{} ::: ";
     };
 
     composer-validate = {
@@ -119,14 +172,23 @@
       name = "PHPStan";
       inherit (config.languages.php) package;
       pass_filenames = false;
-      entry = "${config.languages.php.package}/bin/php vendor/bin/phpstan analyse";
+      entry = "${config.languages.php.package}/bin/php vendor/bin/phpstan 'analyse'";
       args = [ "--memory-limit=256m" ];
+    };
+
+    rector = {
+      enable = true;
+      name = "Rector";
+      inherit (config.languages.php) package;
+      files = ".*\.php$";
+      entry = "${config.languages.php.package}/bin/php vendor/bin/rector 'process'";
+      args = [ "--dry-run" ];
     };
 
     php-cs-fixer = {
       enable = true;
       inherit (config.languages.php) package;
-      entry = "${config.languages.php.package}/bin/php vendor/bin/php-cs-fixer fix";
+      entry = "${config.languages.php.package}/bin/php vendor/bin/php-cs-fixer 'fix'";
       args = [
         "--config"
         "${config.env.DEVENV_ROOT}/.php-cs-fixer.php"
@@ -135,40 +197,6 @@
     };
 
   };
-
-  # https://devenv.sh/processes/
-  # processes.cargo-watch.exec = "cargo-watch";
-
-  # https://devenv.sh/services/
-  # services.postgres.enable = true;
-
-  # https://devenv.sh/scripts/
-  scripts = {
-    hello.exec = ''
-      echo hello from $GREET
-    '';
-    parallel-will-cite.exec = ''
-      yes 'will cite' | parallel --citation 2&>'/dev/null'
-    '';
-  };
-
-  enterShell = ''
-    hello
-    parallel-will-cite
-    git --version
-  '';
-
-  # https://devenv.sh/tasks/
-  # tasks = {
-  #   "myproj:setup".exec = "mytool build";
-  #   "devenv:enterShell".after = [ "myproj:setup" ];
-  # };
-
-  # https://devenv.sh/tests/
-  enterTest = ''
-    echo "Running tests"
-    git --version | grep --color=auto "${pkgs.git.version}"
-  '';
 
   # See full reference at https://devenv.sh/reference/options/
 }

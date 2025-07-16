@@ -41,6 +41,15 @@ Skeleton for Symfony web apps
   - [PHPStan Type Perfect rules @ GitHub](https://github.com/rectorphp/type-perfect/).
   - [Doctrine extensions for PHPStan @ GitHub](https://github.com/phpstan/phpstan-doctrine).
 
+- [Rector](https://getrector.com/)
+
+## 🙇 Acknowledgements
+
+- [EditorConfig](https://editorconfig.org/)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- [Gitmoji](https://gitmoji.dev/)
+- [GitHub Simp](https://readmi.xyz/)
+
 ## ➤ License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
