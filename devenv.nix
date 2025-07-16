@@ -47,85 +47,93 @@
 
   dotenv.enable = true;
 
-  git-hooks = {
-    hooks = {
-      # Nix files
-      nixfmt-rfc-style.enable = true;
+  # https://devenv.sh/git-hooks/
+  git-hooks.hooks = {
+    # Nix files
+    nil.enable = true;
+    nixfmt-rfc-style.enable = true;
+    statix.enable = true;
 
-      # Commit messages
-      commitizen.enable = true;
+    # Commit messages
+    commitizen.enable = true;
 
-      # Markdown files
-      markdownlint.enable = true;
-      mdformat.enable = true;
+    # EditorConfig
+    eclint.enable = true;
+    editorconfig-checker.enable = true;
 
-      # Composer json file
-      composer-normalize = {
-        enable = true;
-        name = "composer normalize";
-        before = [ "composer-validate" ];
-        package = pkgs.phpPackages.composer;
-        extraPackages = [
-          pkgs.parallel
-          pkgs.git
-        ];
-        files = "composer.json";
-        entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize --dry-run \"$(${pkgs.git}/bin/git rev-parse --show-toplevel)/\"{} ::: ";
-      };
+    # Markdown files
+    markdownlint.enable = true;
+    mdformat.enable = true;
 
-      composer-validate = {
-        enable = true;
-        name = "composer validate";
-        package = pkgs.phpPackages.composer;
-        extraPackages = [
-          pkgs.parallel
-        ];
-        files = "composer\.(json|lock)$";
-        entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer validate --no-check-publish {} ::: ";
-        stages = [
-          "pre-commit"
-          "pre-push"
-        ];
-      };
+    # Shell scripts
+    shellcheck.enable = true;
+    shfmt.enable = true;
 
-      composer-audit = {
-        enable = true;
-        name = "composer audit";
-        after = [ "composer-validate" ];
-        package = pkgs.phpPackages.composer;
-        extraPackages = [
-          pkgs.parallel
-          pkgs.coreutils
-        ];
-        files = "composer\.(json|lock)$";
-        verbose = true;
-        entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer --working-dir=\"$(${pkgs.coreutils}/bin/dirname {})\" audit ::: ";
-        stages = [
-          "pre-commit"
-          "pre-push"
-        ];
-      };
-
-      phpstan = {
-        enable = true;
-        name = "PHPStan";
-        package = config.languages.php.package;
-        pass_filenames = false;
-        entry = "${config.languages.php.package}/bin/php vendor/bin/phpstan analyse";
-        args = [ "--memory-limit=256m" ];
-      };
-
-      php-cs-fixer = {
-        enable = true;
-        package = config.languages.php.package;
-        entry = "${config.languages.php.package}/bin/php vendor/bin/php-cs-fixer fix";
-        args = [
-          "--config"
-          "${config.env.DEVENV_ROOT}/.php-cs-fixer.php"
-          "--dry-run"
-        ];
-      };
+    # Composer json file
+    composer-normalize = {
+      enable = true;
+      name = "composer normalize";
+      before = [ "composer-validate" ];
+      package = pkgs.phpPackages.composer;
+      extraPackages = [
+        pkgs.parallel
+        pkgs.git
+      ];
+      files = "composer.json";
+      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize --dry-run \"$(${pkgs.git}/bin/git rev-parse --show-toplevel)/\"{} ::: ";
     };
+
+    composer-validate = {
+      enable = true;
+      name = "composer validate";
+      package = pkgs.phpPackages.composer;
+      extraPackages = [ pkgs.parallel ];
+      files = "composer\.(json|lock)$";
+      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer validate --no-check-publish {} ::: ";
+      stages = [
+        "pre-commit"
+        "pre-push"
+      ];
+    };
+
+    composer-audit = {
+      enable = true;
+      name = "composer audit";
+      after = [ "composer-validate" ];
+      package = pkgs.phpPackages.composer;
+      extraPackages = [
+        pkgs.parallel
+        pkgs.coreutils
+      ];
+      files = "composer\.(json|lock)$";
+      verbose = true;
+      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer --working-dir=\"$(${pkgs.coreutils}/bin/dirname {})\" audit ::: ";
+      stages = [
+        "pre-commit"
+        "pre-push"
+      ];
+    };
+
+    phpstan = {
+      enable = true;
+      name = "PHPStan";
+      inherit (config.languages.php) package;
+      pass_filenames = false;
+      entry = "${config.languages.php.package}/bin/php vendor/bin/phpstan analyse";
+      args = [ "--memory-limit=256m" ];
+    };
+
+    php-cs-fixer = {
+      enable = true;
+      inherit (config.languages.php) package;
+      entry = "${config.languages.php.package}/bin/php vendor/bin/php-cs-fixer fix";
+      args = [
+        "--config"
+        "${config.env.DEVENV_ROOT}/.php-cs-fixer.php"
+        "--dry-run"
+      ];
+    };
+
   };
 
   # https://devenv.sh/processes/
@@ -161,9 +169,6 @@
     echo "Running tests"
     git --version | grep --color=auto "${pkgs.git.version}"
   '';
-
-  # https://devenv.sh/git-hooks/
-  # git-hooks.hooks.shellcheck.enable = true;
 
   # See full reference at https://devenv.sh/reference/options/
 }
