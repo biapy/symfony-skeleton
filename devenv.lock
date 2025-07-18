@@ -3,16 +3,33 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1752148960,
+        "lastModified": 1752809878,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "8d475aa9368cee3433a042cd793f6daefb2825a2",
+        "rev": "5ff577e51ca097d67c9ed44a37c836ddc729f8ff",
         "type": "github"
       },
       "original": {
         "dir": "src/modules",
         "owner": "cachix",
         "repo": "devenv",
+        "type": "github"
+      }
+    },
+    "devenv-recipes": {
+      "flake": false,
+      "locked": {
+        "dir": "src",
+        "lastModified": 1752822748,
+        "owner": "biapy",
+        "repo": "devenv-recipes",
+        "rev": "8338b357471fb03dea1f9604b5a1c5bba67522b6",
+        "type": "github"
+      },
+      "original": {
+        "dir": "src",
+        "owner": "biapy",
+        "repo": "devenv-recipes",
         "type": "github"
       }
     },
@@ -90,6 +107,7 @@
     "root": {
       "inputs": {
         "devenv": "devenv",
+        "devenv-recipes": "devenv-recipes",
         "git-hooks": "git-hooks",
         "nixpkgs": "nixpkgs",
         "pre-commit-hooks": [

@@ -2,6 +2,9 @@
 inputs:
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
+  devenv-recipes:
+    url: github:biapy/devenv-recipes?dir=src
+    flake: false
 
 # If you're using non-OSS software, you can set allowUnfree to true.
 # allowUnfree: true

@@ -83,3 +83,7 @@ devenv.local.nix
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+# Ignore .mdformat.toml, part of the "markdown.nix" Biapy devenv recipe
+.mdformat.toml
+

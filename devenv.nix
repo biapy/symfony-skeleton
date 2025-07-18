@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   config,
   inputs,
   ...
@@ -8,7 +7,16 @@
 {
   name = "Symfony skeleton";
 
-  dotenv.enable = true;
+  imports = [
+    "${inputs.devenv-recipes}/devenv-scripts.nix"
+    "${inputs.devenv-recipes}/devcontainer.nix"
+    "${inputs.devenv-recipes}/markdown.nix"
+    "${inputs.devenv-recipes}/nix.nix"
+    "${inputs.devenv-recipes}/gitleaks.nix"
+    "${inputs.devenv-recipes}/dotenv.nix"
+    "${inputs.devenv-recipes}/gnu-parallel.nix"
+  ];
+
   starship.enable = true;
   difftastic.enable = true;
   delta.enable = true;
@@ -38,8 +46,6 @@
     lazydocker # Docker TUI
     ctop # Docker TUI, showing running container resources usage
 
-    parallel # Run commands in parallel
-
     symfony-cli
   ];
 
@@ -63,26 +69,11 @@
     hello.exec = ''
       echo hello from $GREET
     '';
-    parallel-will-cite = {
-      description = "Accept GNU parallel citation prompt";
-      exec = ''
-        set -o 'errexit' -o 'nounset' -o 'pipefail'
-        yes 'will cite' | parallel --citation 2&>'/dev/null'
-      '';
-    };
-    detr = {
-      description = "Alias of devenv tasks run";
-      exec = ''
-        set -o 'errexit' -o 'nounset' -o 'pipefail'
-        devenv tasks run "$@"
-      '';
-    };
   };
 
   enterShell = ''
     hello
     git --version
-    parallel-will-cite
 
     export PATH="${config.env.DEVENV_ROOT}/vendor/bin:${config.env.DEVENV_ROOT}/bin:$PATH"
   '';
@@ -90,7 +81,7 @@
   # https://devenv.sh/tasks/
   tasks = {
     "ci:composer-normalize".exec =
-      "${pkgs.fd}/bin/fd 'composer\.json$' '${config.env.DEVENV_ROOT}' --exec ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize {} \;";
+      "${pkgs.fd}/bin/fd 'composer\.json$' '${config.env.DEVENV_ROOT}' --exec ${config.languages.php.packages.composer}/bin/composer bin composer-normalize normalize {} \;";
     "ci:nixfmt".exec =
       "${pkgs.fd}/bin/fd '.*\.nix$' '${config.env.DEVENV_ROOT}' --exec ${pkgs.nixfmt-rfc-style}/bin/nixfmt --strict {} \;";
     "ci:php-cs-fixer".exec = "${config.languages.php.package}/bin/php 'vendor/bin/php-cs-fixer' 'fix'";
@@ -106,17 +97,8 @@
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
-    # Nix files
-    nil.enable = true;
-    nixfmt-rfc-style.enable = true;
-    statix.enable = true;
-
     # Commit messages
     commitizen.enable = true;
-
-    # Markdown files
-    markdownlint.enable = true;
-    mdformat.enable = true;
 
     # Shell scripts
     shellcheck.enable = true;
@@ -127,22 +109,22 @@
       enable = true;
       name = "composer normalize";
       before = [ "composer-validate" ];
-      package = pkgs.phpPackages.composer;
+      package = config.languages.php.packages.composer;
       extraPackages = [
         pkgs.parallel
         pkgs.git
       ];
       files = "composer.json";
-      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer bin composer-normalize normalize --dry-run \"${config.env.DEVENV_ROOT}/\"{} ::: ";
+      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.packages.composer}/bin/composer bin composer-normalize normalize --dry-run \"${config.env.DEVENV_ROOT}/\"{} ::: ";
     };
 
     composer-validate = {
       enable = true;
       name = "composer validate";
-      package = pkgs.phpPackages.composer;
+      package = config.languages.php.packages.composer;
       extraPackages = [ pkgs.parallel ];
       files = "composer\.(json|lock)$";
-      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer validate --no-check-publish {} ::: ";
+      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.packages.composer}/bin/composer validate --no-check-publish {} ::: ";
       stages = [
         "pre-commit"
         "pre-push"
@@ -153,14 +135,14 @@
       enable = true;
       name = "composer audit";
       after = [ "composer-validate" ];
-      package = pkgs.phpPackages.composer;
+      package = config.languages.php.packages.composer;
       extraPackages = [
         pkgs.parallel
         pkgs.coreutils
       ];
       files = "composer\.(json|lock)$";
       verbose = true;
-      entry = "${pkgs.parallel}/bin/parallel ${pkgs.phpPackages.composer}/bin/composer --working-dir=\"$(${pkgs.coreutils}/bin/dirname {})\" audit ::: ";
+      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.packages.composer}/bin/composer --working-dir=\"$(${pkgs.coreutils}/bin/dirname {})\" audit ::: ";
       stages = [
         "pre-commit"
         "pre-push"
