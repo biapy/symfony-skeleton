@@ -64,6 +64,9 @@ devenv.local.nix
 # PHP CS Fixer cache
 /.php-cs-fixer.cache
 
+# PHP CodeSniffer cache
+/.phpcs.cache
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -83,7 +86,3 @@ devenv.local.nix
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
-
-# Ignore .mdformat.toml, part of the "markdown.nix" Biapy devenv recipe
-.mdformat.toml
-

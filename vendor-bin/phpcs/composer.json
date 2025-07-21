@@ -1,0 +1,15 @@
+{
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
+        "escapestudios/symfony2-coding-standard": "3.x-dev",
+        "micheh/phpcs-gitlab": "^2.0",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "spryker/code-sniffer": "^0.17.28",
+        "squizlabs/php_codesniffer": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

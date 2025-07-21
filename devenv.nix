@@ -9,6 +9,7 @@
 
   imports = [
     "${inputs.devenv-recipes}/devenv-scripts.nix"
+    "${inputs.devenv-recipes}/git.nix"
     "${inputs.devenv-recipes}/devcontainer.nix"
     "${inputs.devenv-recipes}/markdown.nix"
     "${inputs.devenv-recipes}/nix.nix"
@@ -18,20 +19,15 @@
   ];
 
   starship.enable = true;
-  difftastic.enable = true;
-  delta.enable = true;
 
   # https://devenv.sh/basics/
   env.GREET = "symfony-skeleton";
 
   # https://devenv.sh/packages/
   packages = with pkgs; [
-    git
-    lazygit # Git terminal UI
 
     lnav # Log files viewer
     lazyjournal # TUI for journalctl, file system logs, as well Docker and Podman containers.
-    glow # TUI Markdown file viewer
 
     silver-searcher # ag, ack alternative
     f2 # Batch file renamer
@@ -80,12 +76,11 @@
 
   # https://devenv.sh/tasks/
   tasks = {
-    "ci:composer-normalize".exec =
+    "ci:format:composer-normalize".exec =
       "${pkgs.fd}/bin/fd 'composer\.json$' '${config.env.DEVENV_ROOT}' --exec ${config.languages.php.packages.composer}/bin/composer bin composer-normalize normalize {} \;";
-    "ci:nixfmt".exec =
-      "${pkgs.fd}/bin/fd '.*\.nix$' '${config.env.DEVENV_ROOT}' --exec ${pkgs.nixfmt-rfc-style}/bin/nixfmt --strict {} \;";
-    "ci:php-cs-fixer".exec = "${config.languages.php.package}/bin/php 'vendor/bin/php-cs-fixer' 'fix'";
-    "ci:rector".exec = "${config.languages.php.package}/bin/php 'vendor/bin/rector' 'process'";
+    "ci:format:php-cs-fixer".exec =
+      "${config.languages.php.package}/bin/php 'vendor/bin/php-cs-fixer' 'fix'";
+    "ci:format:rector".exec = "${config.languages.php.package}/bin/php 'vendor/bin/rector' 'process'";
     # "devenv:enterShell".after = [ "myproj:setup" ];
   };
 
@@ -169,7 +164,9 @@
 
     php-cs-fixer = {
       enable = true;
+      name = "PHP Coding Standards Fixer";
       inherit (config.languages.php) package;
+      files = ".*\.php$";
       entry = "${config.languages.php.package}/bin/php vendor/bin/php-cs-fixer 'fix'";
       args = [
         "--config"
@@ -178,6 +175,16 @@
       ];
     };
 
+    phpcs = {
+      enable = true;
+      name = "PHP CodeSniffer";
+      inherit (config.languages.php) package;
+      files = ".*\.php$";
+      entry = "${config.languages.php.package}/bin/php vendor/bin/phpcs";
+      args = [
+        "-s"
+      ];
+    };
   };
 
   # See full reference at https://devenv.sh/reference/options/

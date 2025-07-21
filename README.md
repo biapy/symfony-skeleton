@@ -11,6 +11,8 @@ Skeleton for Symfony web apps
 - [PHP](https://www.php.net/)
 - [Symfony](https://symfony.com/)
 
+<!-- CSpell:ignore symfony devenv -->
+
 ### Composer
 
 - [Composer](https://getcomposer.org/)
@@ -26,6 +28,8 @@ Skeleton for Symfony web apps
 
 - [mdformat](https://mdformat.readthedocs.io/en/stable/)
 - [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli)
+
+<!-- CSpell:ignore symfony devenv mdformat -->
 
 #### PHP
 
@@ -43,12 +47,24 @@ Skeleton for Symfony web apps
 
 - [Rector](https://getrector.com/)
 
+- [PHP CodeSniffer @ GitHub](https://github.com/PHPCSStandards/PHP_CodeSniffer)
+
+  with these plugins:
+
+  - [Slevomat Coding Standard @ GitHub](https://github.com/slevomat/coding-standard).
+  - [PHPCompatibility @ GitHub](https://github.com/PHPCompatibility/PHPCompatibility).
+  - [PHP_CodeSniffer Standards Composer Installer Plugin @ GitHub](https://github.com/PHPCSStandards/composer-installer).
+  - [Symfony PHP CodeSniffer Coding Standard @ GitHub](https://github.com/djoos/Symfony-coding-standard).
+  - [GitLab Report for PHP_CodeSniffer @ GitHub](https://github.com/micheh/phpcs-gitlab).
+
 ## 🙇 Acknowledgements
 
 - [EditorConfig](https://editorconfig.org/)
 - [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 - [Gitmoji](https://gitmoji.dev/)
 - [GitHub Simp](https://readmi.xyz/)
+
+<!-- CSpell:ignore Gitmoji -->
 
 ## ➤ License
 
