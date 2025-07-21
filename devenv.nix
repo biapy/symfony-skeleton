@@ -107,10 +107,9 @@
       package = config.languages.php.packages.composer;
       extraPackages = [
         pkgs.parallel
-        pkgs.git
       ];
       files = "composer.json";
-      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.packages.composer}/bin/composer bin composer-normalize normalize --dry-run \"${config.env.DEVENV_ROOT}/\"{} ::: ";
+      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.packages.composer}/bin/composer bin composer-normalize normalize --dry-run '${config.env.DEVENV_ROOT}/'{} ::: ";
     };
 
     composer-validate = {
@@ -149,7 +148,7 @@
       name = "PHPStan";
       inherit (config.languages.php) package;
       pass_filenames = false;
-      entry = "${config.languages.php.package}/bin/php vendor/bin/phpstan 'analyse'";
+      entry = "${config.languages.php.package}/bin/php '${config.env.DEVENV_ROOT}/vendor/bin/phpstan' 'analyse'";
       args = [ "--memory-limit=256m" ];
     };
 
@@ -158,7 +157,7 @@
       name = "Rector";
       inherit (config.languages.php) package;
       files = ".*\.php$";
-      entry = "${config.languages.php.package}/bin/php vendor/bin/rector 'process'";
+      entry = "${config.languages.php.package}/bin/php '${config.env.DEVENV_ROOT}/vendor/bin/rector' 'process'";
       args = [ "--dry-run" ];
     };
 
@@ -167,7 +166,7 @@
       name = "PHP Coding Standards Fixer";
       inherit (config.languages.php) package;
       files = ".*\.php$";
-      entry = "${config.languages.php.package}/bin/php vendor/bin/php-cs-fixer 'fix'";
+      entry = "${config.languages.php.package}/bin/php '${config.env.DEVENV_ROOT}/vendor/bin/php-cs-fixer' 'fix'";
       args = [
         "--config"
         "${config.env.DEVENV_ROOT}/.php-cs-fixer.php"
@@ -180,10 +179,21 @@
       name = "PHP CodeSniffer";
       inherit (config.languages.php) package;
       files = ".*\.php$";
-      entry = "${config.languages.php.package}/bin/php vendor/bin/phpcs";
+      entry = "${config.languages.php.package}/bin/php '${config.env.DEVENV_ROOT}/vendor/bin/phpcs'";
       args = [
         "-s"
       ];
+    };
+
+    phpmd = {
+      enable = true;
+      name = "PHP Mess Detector";
+      inherit (config.languages.php) package;
+      files = ".*\.php$";
+      extraPackages = [
+        pkgs.parallel
+      ];
+      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.package}/bin/php -d 'error_reporting=~E_DEPRECATED' '${config.env.DEVENV_ROOT}/vendor/bin/phpmd' {} 'ansi' '${config.env.DEVENV_ROOT}/phpmd.xml.dist' ::: ";
     };
   };
 
