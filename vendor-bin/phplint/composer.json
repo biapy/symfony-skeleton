@@ -1,13 +1,13 @@
 {
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.83"
+        "overtrue/phplint": "^9.6"
     },
     "scripts": {
         "post-install-cmd": [
             "@install-link"
         ],
         "install-link": [
-            "test -e '../../vendor/bin/php-cs-fixer' || ln --symbolic ../../vendor-bin/php-cs-fixer/vendor/bin/php-cs-fixer ../../vendor/bin/php-cs-fixer"
+            "test -e '../../vendor/bin/phplint' || ln --symbolic ../../vendor-bin/phplint/vendor/bin/phplint ../../vendor/bin/phplint"
         ]
     },
     "scripts-descriptions": {

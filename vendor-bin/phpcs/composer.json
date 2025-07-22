@@ -11,5 +11,25 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@install-link"
+        ],
+        "install-link": [
+            "@install-phpcs-link",
+            "@install-phpcbs-link"
+        ],
+        "install-phpcbs-link": [
+            "test -e '../../vendor/bin/phpcbs' || ln --symbolic ../../vendor-bin/phpcs/vendor/bin/phpcs ../../vendor/bin/phpcbs"
+        ],
+        "install-phpcs-link": [
+            "test -e '../../vendor/bin/phpcs' || ln --symbolic ../../vendor-bin/phpcs/vendor/bin/phpcs ../../vendor/bin/phpcs"
+        ]
+    },
+    "scripts-descriptions": {
+        "install-link": "Install composer bin link",
+        "install-phpcbs-link": "Install phpcbs link",
+        "install-phpcs-link": "Install phpcs link"
     }
 }

@@ -44,7 +44,7 @@
         "twig/twig": "^2.12 || ^3.21.1"
     },
     "require-dev": {
-        "bamarni/composer-bin-plugin": "^1.8",
+        "bamarni/composer-bin-plugin": "^1.8.2",
         "phpunit/phpunit": "^12.2.6",
         "symfony/browser-kit": "~7.3.0",
         "symfony/css-selector": "~7.3.0",
@@ -89,6 +89,9 @@
         "sort-packages": true
     },
     "extra": {
+        "bamarni-bin": {
+            "bin-links": false
+        },
         "symfony": {
             "allow-contrib": false,
             "docker": true,
